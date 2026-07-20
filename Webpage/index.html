@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep Monitor</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2"></script>
+</head>
+<body>
+
+  <div class="app">
+
+  <h1>Sleep App</h1>
+  <div id="status">Not connected</div>
+
+  <button id="connectBtn" onclick="connectBLE()">Connect to device</button>
+
+  <div id="readings">
+    <div><span class="value" id="tempVal">--</span>Temp °C</div>
+    <div><span class="value" id="humVal">--</span>Humidity %</div>
+    <div><span class="value" id="lightVal">--</span>Light</div>
+    <div><span class="value" id="soundVal">--</span>Sound</div>
+  </div>
+
+  <div class="charts-row">
+
+  <div class="chart-block">
+    <div class="chart-header">
+      <h2>Environment</h2>
+      <button class="zoom-reset" onclick="envChart.resetZoom()">reset</button>
+    </div>
+    <div class="chart-canvas-wrap">
+      <canvas id="envChart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-block">
+    <div class="chart-header">
+      <h2>Activity</h2>
+      <button class="zoom-reset" onclick="activityChart.resetZoom()">reset</button>
+    </div>
+    <div class="chart-canvas-wrap">
+      <canvas id="activityChart"></canvas>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="button-row">
+    <button id="relayBtn" onclick="toggleRelay()" disabled>Fan: OFF</button>
+    <button onclick="clearSavedData()" style="background:#33363c;">Clear saved data</button>
+  </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

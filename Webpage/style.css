@@ -1,0 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: -apple-system, Roboto, Arial, sans-serif;
+  background: #14161a;
+  color: #f2f2f0;
+  overflow-x: hidden;
+}
+.app {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+h2 {
+  font-size: 13px;
+  font-weight: 500;
+  color: #9a9a95;
+  margin: 0;
+}
+.chart-block {
+  margin-top: 16px;
+  min-width: 0; /* lets flex/grid children shrink instead of forcing overflow */
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.zoom-reset {
+  width: auto;
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 11px;
+  margin: 0;
+  background: #262930;
+  color: #9a9a95;
+  border-radius: 6px;
+}
+.zoom-reset:active {
+  background: #33363c;
+}
+#status {
+  color: #9a9a95;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+#status.connected {
+  color: #6fcf97;
+}
+button {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #3a7bd5;
+  color: white;
+}
+button:active {
+  background: #2f63ab;
+}
+button:disabled {
+  background: #33363c;
+  color: #6a6a66;
+}
+#relayBtn {
+  margin-top: 20px;
+  background: #33363c;
+}
+#relayBtn.on {
+  background: #d5673a;
+}
+#relayBtn.on:active {
+  background: #ab4f2f;
+}
+#readings {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+  font-size: 13px;
+}
+#readings div {
+  text-align: center;
+  flex: 1;
+}
+#readings .value {
+  font-size: 18px;
+  font-weight: 500;
+  display: block;
+}
+.chart-canvas-wrap {
+  position: relative;
+  height: 200px;
+  width: 100%;
+}
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.charts-row {
+  display: contents;
+}
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+.button-row button {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* Wider screens: charts stay their normal size, pinned to one side;
+   buttons fill the empty space on the other side */
+@media (min-width: 800px) {
+  .app {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1150px max-content;
+    column-gap: 32px;
+    align-items: start;
+  }
+  h1, #status, #connectBtn, #readings {
+    grid-column: 1 / -1;
+  }
+  .chart-canvas-wrap {
+    height: 260px;
+  }
+  .charts-row {
+    grid-column: 1;
+    display: block;
+  }
+  .button-row {
+    grid-column: 2;
+    flex-direction: column;
+    gap: 16px;
+    align-self: start;
+    justify-content: start;
+  }
+  .button-row button {
+    flex: none;
+    width: 160px;
+    height: 80px;
+    padding: 0;
+    font-size: 15px;
+  }
+}

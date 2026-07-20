@@ -2,8 +2,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <DHT.h>
-//#include <SPI.h>
-//#include <SD.h>
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
 
 #define DHTPIN 4
 #define DHTTYPE DHT11 //add DHT22 if newer version
@@ -19,7 +21,13 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define outputA 32
 #define outputB 33
 
-//const int chipSelect = 4;
+#define SERVICE_UUID        "12345678-1234-1234-1234-1234567890ab"
+#define DATA_CHAR_UUID      "12345678-1234-1234-1234-1234567890ac"
+#define RELAY_CHAR_UUID     "12345678-1234-1234-1234-1234567890ad"
+
+BLECharacteristic *dataCharacteristic;
+BLECharacteristic *relayCharacteristic;
+bool deviceConnected = false;
 
 unsigned long interval = 60000;
 unsigned long preMillis = 0;
@@ -27,6 +35,8 @@ unsigned long noiseAlertuntil = 0;
 const unsigned long AlertDuration = 500;
 unsigned long lastRead = 0;
 const unsigned long readInterval = 2000;
+unsigned long lastSoundCheck = 0;
+const unsigned long soundCheckInterval = 1000;
 bool ShowTime = false;
 bool LastSwitchState = HIGH;
 bool setAlarm = false;
@@ -67,6 +77,31 @@ int count = 0;
 int total = 0;
 int peakSound = 0;
 
+class ServerCallbacks: public BLEServerCallbacks {
+  void onConnect(BLEServer* server){
+    deviceConnected = true;\
+    Serial.println("Phone connected");
+  }
+  void onDisconnect(BLEServer* server){
+    deviceConnected = false;
+    Serial.println("Phone disconnected");
+    server->getAdvertising()->start();
+  }
+};
+
+class RelayCallbacks: public BLECharacteristicCallbacks{
+  void onWrite(BLECharacteristic *characteristic){
+    String value = characteristic->getValue();
+    if (value == "1"){
+      digitalWrite(relay, HIGH);
+      Serial.println("Relay on (App)");
+    }
+    else if (value == "0") {
+      digitalWrite(relay, LOW);
+      Serial.println("Relay OFF (App)");
+    }
+  }
+};
 void displayTime(int h1, int h2, int m1, int m2){
   display.clearDisplay();
 
@@ -88,6 +123,20 @@ void displayTime(int h1, int h2, int m1, int m2){
     
   display.display();
 
+}
+
+int sampleSoundLevel(){
+  int minVal = 4095\
+  int maxVal = 0;
+
+  unsigned long start = millis();
+  while (millis() - start < 300){
+    int reading = analogRead(soundSensor);
+    if(reading > maxVal) maxVal = reading;
+    if(reading < minVal) minVal = reading;
+  }
+
+  return maxVal - minVal;
 }
 
 void setTime(int &h1, int &h2, int &m1, int &m2){
@@ -274,7 +323,35 @@ void setup() {                                                   //SETUP
   display.setTextColor(WHITE);
 
   digitalWrite(LightLED, LOW);
+  digitalWrite(relay, LOW);
 
+  BLEDevice::init("SleepMonitor");
+
+  BLEServer *server = BLEDevice::createServer();
+  server->setCallbacks(new ServerCallbacks());
+
+  BLEService *service = server->createService(SERVICE_UUID);
+
+
+  dataCharacteristic = service->createCharacteristic(
+    DATA_CHAR_UUID,
+    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY
+  );
+  dataCharacteristic->addDescriptor(new BLE2902());
+
+  relayCharacteristic = service->createCharacteristic(
+    RELAY_CHAR_UUID,
+    BLECharacteristic::PROPERTY_WRITE
+  );
+  relayCharacteristic->setCallbacks(new RelayCallbacks());
+
+  service->start();
+
+  BLEAdvertising *advertising = BLEDevice::getAdvertising();
+  advertising->addServiceUUID(SERVICE_UUID);
+  advertising->start();
+
+  Serial.println("BLE ready, advertising as 'SleepMonitor'");
 
   setTime( hours_1, hours_2, minutes_1, minutes_2);
   delay(500);
@@ -316,12 +393,33 @@ void loop() {                                                     //LOOP
 
   switchState = digitalRead(switch_b);  
 
+  if(millis() - lastSoundCheck >= soundCheckInterval) {
+    lastSoundCheck = millis();
+
+    int soundLevel = sampleSoundLevel();
+
+    if (soundLevel >= 200){
+      NoiseAlert();
+    }
+    currentSound = soundLevel;
+  }
+
   if(millis() - lastRead >= readInterval){
    t = dht.readTemperature();        // Temp & Humidity Readings
     h = dht.readHumidity();
     lastRead = millis();
+
+    if(deviceConnected) {
+      String payload = String(t) + "," + String(h) + "," + String(lightAmt) + "," + String(currentSound) + "," + String(digitalRead(relay));
+
+      dataCharacteristic->setValue(payload.c_str());
+      dataCharacteristic->notify();
+
+      Serial.println("Sent: " + payload);
+    }
   }
   
+
 
  if (millis() >= noiseAlertuntil){                                  //MAIN BLOCK
 
@@ -349,18 +447,18 @@ void loop() {                                                     //LOOP
   lightAmt = analogRead(LDR);
   Serial.println(lightAmt);
 
-  if (lightAmt > 130 ){
+  if (lightAmt > 70 ){
     digitalWrite(LightLED, LOW);
   }
-  if ( lightAmt < 120 ){                    // Light
+  if ( lightAmt < 50 ){                    // Light
     digitalWrite(LightLED, HIGH);
   }
+/*
+  //currentSound = analogRead(soundSensor);       // Sound 
+  //total += currentSound;
+  //count++;
 
-  currentSound = analogRead(soundSensor);       // Sound 
-  total += currentSound;
-  count++;
-
-  if (currentSound > peakSound){
+  //if (currentSound > peakSound){
     peakSound = currentSound;   
   }
 
@@ -373,7 +471,7 @@ void loop() {                                                     //LOOP
     total = 0;
     peakSound = 0;         
   }
-
+*/
 
   unsigned long curMillis = millis();
   // h1,h2,m1,m2
@@ -404,11 +502,8 @@ void loop() {                                                     //LOOP
 
   
 
-    if (t > 19.5){
+    if (t > 24){
       digitalWrite(relay, HIGH);
-    }
-    else{
-     digitalWrite(relay, LOW);
     }
 
   LastSwitchState = switchState;
