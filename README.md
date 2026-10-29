@@ -13,8 +13,10 @@ Sleep Helper is a box that sits by your night stand and provides you data about 
 * Sleep sensor
 * Alarm
 
+**MainCodeFun IS THE FINAL CODE**
+
 ## Using this repo:
-1. Code is located in [Arduino](https://github.com/manula5454/Sleep-Helper/tree/8dfda3dc41291881e5782dcd2b5fa8ecebd2d8ed/Main_Code1) and can easily be uploaded to ESP32 with the ESP32 board library 
+1. Code is located in [Arduino](https://github.com/manula5454/Sleep-Helper/blob/80c0facc8ba70d53b0e343af6b2a82c639735664/MainCodeFun/MainCodeFun.ino) and can easily be uploaded to ESP32 with the ESP32 board library 
 2. Other code can be used to test some sensors and see early iterations of my code for hardware [Other Code](https://github.com/manula5454/Sleep-Helper/tree/8dfda3dc41291881e5782dcd2b5fa8ecebd2d8ed/Other%20Code)
 3. Get a breadboard and start wiring according to the table below.
 4. Download the webpage and copy the path for the .html file and copy link onto web browser of your choice [Webpage](https://github.com/manula5454/Sleep-Helper/tree/8dfda3dc41291881e5782dcd2b5fa8ecebd2d8ed/Webpage)
