@@ -13,13 +13,13 @@ Sleep Helper is a box that sits by your night stand and provides you data about 
 * Alarm
 
 ## Using this repo:
-1. Code is located in [Arduino]() and can easily be uploaded to ESP32 with the ESP32 board library 
-2. Other code can be used to test some sensors and see early iterations of my code for hardware [Other Code]()
-3. Get a breadboard and start wiring according to the schematic [schematic]()
-4. Download the webpage and copy the path for the .html file and copy link onto web browser of your choice.
+1. Code is located in [Arduino](https://github.com/manula5454/Sleep-Helper/tree/8dfda3dc41291881e5782dcd2b5fa8ecebd2d8ed/Main_Code1) and can easily be uploaded to ESP32 with the ESP32 board library 
+2. Other code can be used to test some sensors and see early iterations of my code for hardware [Other Code](https://github.com/manula5454/Sleep-Helper/tree/8dfda3dc41291881e5782dcd2b5fa8ecebd2d8ed/Other%20Code)
+3. Get a breadboard and start wiring according to the table below.
+4. Download the webpage and copy the path for the .html file and copy link onto web browser of your choice [Webpage](https://github.com/manula5454/Sleep-Helper/tree/8dfda3dc41291881e5782dcd2b5fa8ecebd2d8ed/Webpage)
 5. Connect your board to the webpage (make sure bluetooth on your device is enabled)
 6. Edit Arduino code for your sensors sensitivity.
-7. If you have a 3D printer download the CAD files and enhance your nightstand experience! [CAD]()
+7. If you have a 3D printer download the CAD files and enhance your nightstand experience! [CAD](CAD)
 8. Place it on your night stand and good night!
 
 CAD --> No printable files are available as they should be tweaked for your own 3D printer and your own components.
@@ -63,9 +63,9 @@ Parts List:
 * Big sound sensor module
 * Rotary encoder module w/ switch
 * LDR
-* LEDs
+* LED
 * DC motor
-* 10uF Capacitor
+* 10uF Capacitor (connect to power rail)
 * Resistors
 * Active Buzzer (can be module)
 * Pushbutton
@@ -99,8 +99,11 @@ Parts List:
 | Relay module | IN | GPIO19 | |
 | Relay module | VCC | 5V | |
 | Relay module | GND | GND | |
-
-
+| 5V supply | Relay COM | Same supply that powers the ESP32 |
+| Relay NO | Motor wire 1 | Switched leg |
+| Motor wire 2 | GND | Common ground |
+| Relay NC | Not connected | |
+| 470 µF capacitor (optional) | Across 5V and GND near the relay | Long leg to 5V |
 ## Webpage
 
 To connect your ESP32 to the webpage:
