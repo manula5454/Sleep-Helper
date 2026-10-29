@@ -84,4 +84,4 @@ Clear Saved Data --> deletes all data so far
 
 A **baseline** exists for each graph to help understand what your environment should be, can be changed in code.
 
-**IMPORTANT: As the webpage is local only it can store data continously BUT if the site is refreshed it will disconnect from device and thus not continue reading data (but still keep the data collected so far)**
+**IMPORTANT: As the webpage is local only it can store data continously BUT if the site is refreshed it will disconnect from device and thus not continue reading data untilit is manually connected again (but still keep the data collected so far)**
