@@ -1,7 +1,8 @@
 # SLEEP HELPER!! 
 Sleep Helper is a box that sits by your night stand and provides you data about your sleep environment when you wake up the next day!
 
-![Hardware]()
+![Webpage](https://github.com/manula5454/Sleep-Helper/blob/21d42190051f7ac357d3748c608b7ce5381138d3/Images/Webpage.png)
+
 ### This project uses an ESP32 with BLE (Bluetooth Low Energy) with hardware including an OLED display (SSD1306), rotary encoder module, DHT11 module, big sound sensor module and LDR. Data collected from these sensors is sent to a webpage which displays it in graphs to evaluate your environment in the morning. It can also act as an alarm. 
 
 * ESP32
@@ -31,6 +32,8 @@ CAD --> No printable files are available as they should be tweaked for your own 
 4. Polished code up for every function
 5. Started building a webpage which displays data in a graph
 6. Designed CAD exterior for project.
+
+![CAD design](https://github.com/manula5454/Sleep-Helper/blob/21d42190051f7ac357d3748c608b7ce5381138d3/Images/CAD.png)
 
 ## Roadblocks
 * Trying to use Arduino UNO as it had too little SRAM for my program
