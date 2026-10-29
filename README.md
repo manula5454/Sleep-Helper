@@ -22,6 +22,8 @@ Sleep Helper is a box that sits by your night stand and provides you data about 
 7. If you have a 3D printer download the CAD files and enhance your nightstand experience! [CAD]()
 8. Place it on your night stand and good night!
 
+CAD --> No printable files are available as they should be tweaked for your own 3D printer and your own components.
+
 ## heres how I made the project :)
 1. Started by displaying an OLED screen with data from DHT11 module (temp & humidity)
 2. Added other modules to add sound and light sensing and some LEDs
@@ -54,8 +56,6 @@ Libraries :
 
 ## Hardware 
 
-This is the schematic [Schematic]()
-
 Parts List: 
 
 * ESP32
@@ -68,7 +68,37 @@ Parts List:
 * 10uF Capacitor
 * Resistors
 * Active Buzzer (can be module)
-* Pushbutton 
+* Pushbutton
+
+### Wiring table
+
+| Component | Component pin | ESP32 pin | Notes |
+|---|---|---|---|
+| OLED (SSD1306, I2C) | SDA | GPIO21 | I2C data |
+| OLED (SSD1306, I2C) | SCL | GPIO22 | I2C clock |
+| OLED (SSD1306, I2C) | VCC | 3V3 | |
+| OLED (SSD1306, I2C) | GND | GND | |
+| DHT11 | DATA | GPIO4 | Temperature and humidity |
+| DHT11 | VCC | 3V3 | |
+| DHT11 | GND | GND | |
+| Rotary encoder | CLK | GPIO32 | |
+| Rotary encoder | DT | GPIO33 | |
+| Rotary encoder | SW | GPIO23 | `INPUT_PULLUP` |
+| Rotary encoder | + | 3V3 | |
+| Rotary encoder | GND | GND | |
+| Dismiss button | Leg 1 | GPIO5 | `INPUT_PULLUP` |
+| Dismiss button | Leg 2 | GND | |
+| Sound sensor | AO | GPIO36 | ADC1, input only |
+| Sound sensor | VCC | 3V3 | Keeps output within 3.3 V |
+| Sound sensor | GND | GND | |
+| LDR + 10 kΩ divider | Midpoint | GPIO39 | ADC1, input only |
+| LDR + 10 kΩ divider | LDR top leg | 3V3 | 10 kΩ resistor from midpoint to GND |
+| Buzzer (active) | + | GPIO18 | |
+| Buzzer (active) | − | GND | |
+| Status LED | Anode via 220 Ω | GPIO13 | Cathode to GND |
+| Relay module | IN | GPIO19 | |
+| Relay module | VCC | 5V | |
+| Relay module | GND | GND | |
 
 
 ## Webpage
